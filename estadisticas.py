@@ -3,8 +3,27 @@ from statistics import mean
 import statistics
 
 
+# Mean = Sum of all items in list divided it's lenght
 def media(X):
     return sum(X) / len(X)
+
+
+# Variance = Summatory of: each item in lists minus the mean, to the two power. 
+# Summatory gets divided by list lenght
+def varianza(X):
+
+    # Calculate MEAN
+    mu = media(X)
+
+    # Summatory starts on 0
+    acumulador = 0
+
+    # each element in list minus MEAN to thw power of 2
+    for x in X:
+        acumulador += (x - mu)**2
+    
+    # Return Varianze by returning summatory divided by lenght of list
+    return acumulador / len(X)
 
 
 if __name__ == '__main__':
