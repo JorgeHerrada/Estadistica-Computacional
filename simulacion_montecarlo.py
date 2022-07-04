@@ -1,5 +1,6 @@
 import random
 import collections
+from typing import Tuple
 from numpy import sort
 
 
@@ -163,6 +164,74 @@ def escalera(manos,intentos,diccionario):
     return escaleras / intentos
 
 
+def color(manos,intentos,diccionario):
+    # number of flushes found
+    colores = 0
+
+    # iterate for each hand in hands' list
+    for mano in manos:
+        # list of values
+        valores = []
+
+        # iterate for each card on hand to get it's suit
+        for carta in mano:
+            valores.append(carta[0])
+
+        # counter to 
+        contador = 0
+
+        for i in range(0,5):
+            if valores[0] == valores[i]:
+                contador += 1
+        
+        if contador == 5:
+            colores += 1
+
+            # print(f"Se ha encontrado un COLOR: {mano}")
+    
+    return colores / intentos
+
+
+def full_house(manos, intentos, diccionario):
+    full_houses = 0
+
+    # Iterate for each hand in list of hands
+    for mano in manos:
+        # list of values
+        valores = []
+
+        tercia = False
+        par = False
+
+        # Iterate for each card on hand
+        for carta in mano:
+            # add value no mather the suit of the card
+            valores.append(carta[1])
+        
+        # Create a dictionary with this format: {value:<occurrences>}
+        counter = dict(collections.Counter(valores))
+        # print(counter)
+
+        # for each value in dictionary
+        for val in counter.values():
+            # if its a pair increase pair counter and finish iteration
+            if val == 3:
+                tercia = True
+            elif val == 2:
+                par = True
+        
+        if tercia and par:
+            full_houses += 1
+            
+    
+    # Calculate the posibility based on the number of pairs found in all the hands that we got
+    return full_houses / intentos
+
+
+
+
+
+
 def main(tamano_mano,intentos):
     # Create deck of cards
     baraja = crear_bajara()
@@ -187,17 +256,29 @@ def main(tamano_mano,intentos):
     probabilidad_doble_par = dos_pares(manos, intentos ,diccionario)
     probabilidad_tercia = tercia(manos, intentos ,diccionario)
     probabilidad_escalera = escalera(manos, intentos ,diccionario)
+    probabilidad_color = color(manos, intentos ,diccionario)
+    probabilidad_full_house = full_house(manos, intentos ,diccionario)
 
     print(f'La probabilidad de encontrar un par en una mano de {tamano_mano} cartas es: {probabilidad_par}')
     print(f'La probabilidad de encontrar dos pares en una mano de {tamano_mano} cartas es: {probabilidad_doble_par}')
     print(f'La probabilidad de encontrar una tercia en una mano de {tamano_mano} cartas es: {probabilidad_tercia}')
     print(f'La probabilidad de encontrar una escalera en una mano de {tamano_mano} cartas es: {probabilidad_escalera}')
+    print(f'La probabilidad de encontrar un color en una mano de {tamano_mano} cartas es: {probabilidad_color}')
+    print(f'La probabilidad de encontrar un full house en una mano de {tamano_mano} cartas es: {probabilidad_full_house}')
 
 if __name__ == '__main__':
 
-    # get size of hand and iterations from user
-    tamano_mano = int(input("De cuantas cartas sera la mano: "))
-    intentos = int(input("Cuantos intentos para calcular probabilidad: "))
+    # get size of hand from user
+    # tamano_mano = int(input("De cuantas cartas sera la mano: "))
+
+    # comment upper line and change this value to keep fix size of hand
+    tamano_mano = 5 
+
+    # get number of hands to simulate
+    # intentos = int(input("Cuantos intentos para calcular probabilidad: "))
+    
+    # comment upper line and change this value to keep fix size of hand
+    intentos = 10000
 
     # call main function
     main(tamano_mano,intentos)
